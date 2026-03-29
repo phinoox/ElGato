@@ -1,0 +1,126 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Attributes/GaMaMainAttributeSet.h"
+#include "GameplayEffectExtension.h"
+
+namespace GaMaTags
+{
+	UE_DEFINE_GAMEPLAY_TAG(TAG_Movement_Mode_Walk, "Movement.Mode.Walk");
+	UE_DEFINE_GAMEPLAY_TAG(TAG_Movement_Mode_Run, "Movement.Mode.Run");
+	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Stunned, "Status.Stunned");
+	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Dead, "Gas.Status.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Hit, "Gas.Status.Hit");
+}
+
+
+
+
+bool UGaMaMainAttributeSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
+{
+	return Super::PreGameplayEffectExecute(Data);
+}
+
+void UGaMaMainAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	if (Data.EvaluatedData.Attribute == GetMetaDamageAttribute())
+	{
+		float TotalDamage = GetMetaDamage();
+		
+		SetMetaDamage(0.0f);
+		
+		float CurrentShield = GetShield();
+		if (CurrentShield>0)
+		{
+			SetShield(CurrentShield-TotalDamage);
+			float RemainingDamage = TotalDamage - CurrentShield;
+			if (RemainingDamage > 0){
+				SetHealth(GetHealth() - RemainingDamage);
+			}
+		}
+		
+		SetHealth(GetHealth()-TotalDamage);
+		
+		if (Data.EffectSpec.Def->GetAssetTags().HasTag(GaMaTags::TAG_Status_Hit) && Data.EvaluatedData.Magnitude != 0.0f)
+		{
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(GaMaTags::TAG_Status_Hit);
+			GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+		}
+	}
+	else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(GetHealth());
+		OnHealthChanged.Broadcast(Data.EvaluatedData.Magnitude, GetHealth());
+		
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(GetMana());
+		OnManaChanged.Broadcast(Data.EvaluatedData.Magnitude, GetMana());
+	}
+	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
+	{
+		SetShield(GetShield());
+		OnShieldChanged.Broadcast(Data.EvaluatedData.Magnitude, GetShield());
+	}
+	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(GetStamina());
+		OnStaminaChanged.Broadcast(Data.EvaluatedData.Magnitude, GetStamina());
+	}
+}
+
+void UGaMaMainAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	OnPostAttributeChanged.Broadcast(Attribute,OldValue,NewValue);
+	if (Attribute== GetHealthAttribute() && NewValue == 0)
+	{
+		FGameplayTagContainer TagContainer;
+		TagContainer.AddTag(GaMaTags::TAG_Status_Dead);
+		if (!GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer))
+		{
+			GetOwningAbilitySystemComponent()->AddLooseGameplayTags(TagContainer);
+		}
+	}
+	
+	if (Attribute == GetMaxHealthAttribute() && GetHealth() == OldValue)
+	{
+		SetHealth(NewValue);
+	}
+	else if (Attribute == GetMaxStaminaAttribute() && GetStamina() == OldValue)
+	{
+		SetStamina(NewValue);
+	}
+	else if (Attribute == GetMaxManaAttribute() && GetMana() == OldValue)
+	{
+		SetMana(NewValue);
+	}
+	else if (Attribute == GetMaxShieldAttribute() && GetShield() == OldValue)
+	{
+		SetShield(NewValue);
+	}
+}
+
+void UGaMaMainAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue= FMath::Clamp(NewValue,0.0f,GetMaxHealth());
+	}
+	else if (Attribute == GetStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue,0.0f,GetMaxStamina());
+	}
+	else if (Attribute == GetManaAttribute())
+	{
+		NewValue=FMath::Clamp(NewValue,0.0f,GetMaxMana());
+	}
+	else if (Attribute == GetShieldAttribute())
+	{
+		NewValue=FMath::Clamp(NewValue,0.0f,GetMaxShield());
+	}
+}
