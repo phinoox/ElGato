@@ -3,17 +3,7 @@
 
 #include "Attributes/GaMaMainAttributeSet.h"
 #include "GameplayEffectExtension.h"
-
-namespace GaMaTags
-{
-	UE_DEFINE_GAMEPLAY_TAG(TAG_Movement_Mode_Walk, "Movement.Mode.Walk");
-	UE_DEFINE_GAMEPLAY_TAG(TAG_Movement_Mode_Run, "Movement.Mode.Run");
-	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Stunned, "Status.Stunned");
-	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Dead, "Gas.Status.Dead");
-	UE_DEFINE_GAMEPLAY_TAG(TAG_Status_Hit, "Gas.Status.Hit");
-}
-
-
+#include "Attributes/GaMaTags.h"
 
 
 bool UGaMaMainAttributeSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
@@ -42,10 +32,10 @@ void UGaMaMainAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffe
 		
 		SetHealth(GetHealth()-TotalDamage);
 		
-		if (Data.EffectSpec.Def->GetAssetTags().HasTag(GaMaTags::TAG_Status_Hit) && Data.EvaluatedData.Magnitude != 0.0f)
+		if (Data.EffectSpec.Def->GetAssetTags().HasTag(GaMaTags::TAG_Character_Status_Hit) && Data.EvaluatedData.Magnitude != 0.0f)
 		{
 			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(GaMaTags::TAG_Status_Hit);
+			TagContainer.AddTag(GaMaTags::TAG_Character_Status_Hit);
 			GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
 		}
 	}
@@ -79,7 +69,7 @@ void UGaMaMainAttributeSet::PostAttributeChange(const FGameplayAttribute& Attrib
 	if (Attribute== GetHealthAttribute() && NewValue == 0)
 	{
 		FGameplayTagContainer TagContainer;
-		TagContainer.AddTag(GaMaTags::TAG_Status_Dead);
+		TagContainer.AddTag(GaMaTags::TAG_Character_Status_Dead);
 		if (!GetOwningAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer))
 		{
 			GetOwningAbilitySystemComponent()->AddLooseGameplayTags(TagContainer);

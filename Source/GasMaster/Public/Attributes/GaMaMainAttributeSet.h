@@ -4,25 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GaMaBaseAttributeSet.h"
-#include "NativeGameplayTags.h"
+
 #include "GaMaMainAttributeSet.generated.h"
 
 
-
-namespace GaMaTags
-{
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Movement_Mode_Walk);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Movement_Mode_Run);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Status_Stunned);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Status_Dead);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Status_Hit);
-}
-
-
-
-
 /**
- * 
+ * Attributeset for basic Attributes common in most Games
  */
 UCLASS()
 class GASMASTER_API UGaMaMainAttributeSet : public UGaMaBaseAttributeSet
@@ -41,7 +28,7 @@ public:
 public:
 	
 	UPROPERTY()
-	FPGaMaAttributeEvent OnLevelhChanged;
+	FPGaMaAttributeEvent OnLevelChanged;
 	
 	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
 	FGameplayAttributeData Level = 1;

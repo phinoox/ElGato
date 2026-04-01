@@ -13,9 +13,11 @@ UCLASS(Abstract)
 class GASMASTER_API UGaMaGameplayAbilityBase : public UGameplayAbility
 {
 	GENERATED_BODY()
+public:
+	UGaMaGameplayAbilityBase();
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/CorruptedCold.GaMaAbilityData"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/GasMaster.GaMaAbilityData"))
 	TObjectPtr<UDataTable> AbilityTable;
 	
 	UFUNCTION(BlueprintCallable)
@@ -24,10 +26,8 @@ public:
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 	
 private:
-	UFUNCTION(BlueprintCallable,CallInEditor)
+	UFUNCTION()
 	void AddToTable();
-		
-	
 	
 #endif
 	

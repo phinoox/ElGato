@@ -18,7 +18,7 @@ public:
 	
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/CorruptedCold.GaMaEffectData"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/GasMaster.GaMaEffectData"))
 	TObjectPtr<UDataTable> EffectTable;
 	
 	UFUNCTION(BlueprintCallable)

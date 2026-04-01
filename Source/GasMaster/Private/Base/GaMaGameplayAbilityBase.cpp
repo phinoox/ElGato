@@ -5,8 +5,14 @@
 
 #include "DataTableEditorUtils.h"
 #include "FileHelpers.h"
+#include "GaMaLog.h"
 #include "Data/GaMaAbilitySetAsset.h"
 #include "UObject/ObjectSaveContext.h"
+
+UGaMaGameplayAbilityBase::UGaMaGameplayAbilityBase()
+{
+
+}
 
 FName UGaMaGameplayAbilityBase::GetAbilityName() const
 {

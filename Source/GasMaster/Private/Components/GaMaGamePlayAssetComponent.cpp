@@ -4,6 +4,7 @@
 #include "Components/GaMaGamePlayAssetComponent.h"
 #include "AbilitySystemGlobals.h"
 //#include "Base/GaMaCharacterBase.h"
+#include "GaMaLog.h"
 #include "Attributes/GaMaBaseAttributeSet.h"
 #include "Base/GaMaGameplayEffectBase.h"
 #include "Data/GaMaEffectSetAsset.h"
@@ -35,15 +36,25 @@ void UGaMaGamePlayAssetComponent::BeginPlay()
 	// construct dummy asset if none was set
 	
 	AbilitySystemComponent = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+	UAbilitySystemGlobals::Get().InitGlobalData();
 	if (AbilitySystemComponent)
 	{
-		AbilitySystemComponent->OnGameplayEffectAppliedDelegateToSelf.AddLambda([]( UAbilitySystemComponent* ASC, const FGameplayEffectSpec& spec, FActiveGameplayEffectHandle handle)
+		
+		AbilitySystemComponent->OnGameplayEffectAppliedDelegateToSelf.AddLambda(
+			[]( UAbilitySystemComponent* ASC, const FGameplayEffectSpec& spec, FActiveGameplayEffectHandle handle)
 		{
 			auto owner = ASC->GetAvatarActor()->GetName();
 			auto effectinfo = spec.ToSimpleString();
-			UE_LOG(LogTemp,Display, TEXT("Effect applied to %s : %s"),*owner,*effectinfo);
+			UE_LOG(LogGasMaster,Verbose, TEXT("Effect applied to %s : %s"),*owner,*effectinfo);
 		});
-		
+		AbilitySystemComponent->AbilityFailedCallbacks.AddLambda(
+			[](const UGameplayAbility* ability,const FGameplayTagContainer container )
+		{
+			auto name = ability->GetName();
+			auto containerinfo = container.ToString();
+				//auto info = ability->
+			UE_LOG(LogGasMaster,Verbose, TEXT("Ability %s failed due to %s"),*name,*containerinfo);
+		});
 		EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(GetOwner());
 		

@@ -29,8 +29,8 @@ public class GasMaster : ModuleRules
 				"GameplayAbilities",
 				"GameplayTags",
 				"GameplayTasks",
-				"EditorScriptingUtilities",
-				"UnrealEd",
+				
+				
 			}
 			);
 			
@@ -42,6 +42,9 @@ public class GasMaster : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"EditorScriptingUtilities",
+				"UnrealEd",
+				"Projects"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

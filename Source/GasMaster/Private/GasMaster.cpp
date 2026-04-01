@@ -2,12 +2,30 @@
 
 #include "GasMaster.h"
 
+#include "GaMaLog.h"
+#include "GameplayTagsManager.h"
+#include "Interfaces/IPluginManager.h"
+
+
 #define LOCTEXT_NAMESPACE "FGasMasterModule"
+
 
 void FGasMasterModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	FString BaseDir = IPluginManager::Get().FindPlugin(TEXT("GasMaster"))->GetBaseDir();
+	FString TagsIniDirectory = BaseDir / TEXT("Config") / TEXT("Tags");
+	if (FPaths::DirectoryExists(TagsIniDirectory))
+	{
+			UE_LOG(LogGasMaster, Log, TEXT("TagIniSearchPath: %s Added"), *TagsIniDirectory);
+
+			UGameplayTagsManager::Get().AddTagIniSearchPath(TagsIniDirectory);
+	}
+	else
+	{
+			UE_LOG(LogGasMaster, Warning, TEXT("TagIniSearchPath: %s not found"), *TagsIniDirectory);
+	}
 }
+
 
 void FGasMasterModule::ShutdownModule()
 {
