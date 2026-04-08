@@ -34,3 +34,15 @@ void UGaMaAbilitySystemComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	// ...
 }
 
+void UGaMaAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability,
+	bool bWasCancelled)
+{
+	Super::NotifyAbilityEnded(Handle, Ability, bWasCancelled);
+	OnAbilityEnded.Broadcast(Ability,Ability->GetAssetTags(),bWasCancelled);
+}
+
+FGameplayTagContainer UGaMaAbilitySystemComponent::GetAssetTags(UGameplayAbility* ability)
+{
+	return ability->GetAssetTags();
+}
+

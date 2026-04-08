@@ -44,7 +44,7 @@ public:
 	UPROPERTY()
 	FPGaMaAttributeEvent OnMaxHealthChanged;
 	
-	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
 	FGameplayAttributeData MaxHealth;
 	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MaxHealth);
 	
@@ -59,7 +59,7 @@ public:
 	UPROPERTY()
 	FPGaMaAttributeEvent OnMaxManaChanged;
 	
-	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
 	FGameplayAttributeData MaxMana;
 	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MaxMana);
 	
@@ -73,7 +73,7 @@ public:
 	UPROPERTY()
 	FPGaMaAttributeEvent OnMaxShieldChanged;
 	
-	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
 	FGameplayAttributeData MaxShield;
 	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MaxShield);
 	
@@ -87,7 +87,7 @@ public:
 	UPROPERTY()
 	FPGaMaAttributeEvent OnMaxStaminaChanged;
  
-	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
 	FGameplayAttributeData MaxStamina;
 	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MaxStamina);
 	
@@ -122,4 +122,18 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="MainAttributes")
 	FGameplayAttributeData MetaDamage;
 	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MetaDamage);
+	
+	UPROPERTY()
+	FPGaMaAttributeEvent OnWalkSpeedFactorChanged;
+	
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
+	FGameplayAttributeData WalkSpeedFactor;
+	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, WalkSpeedFactor);
+	
+	UPROPERTY()
+	FPGaMaAttributeEvent OnMaxWalkSpeedChanged;
+	
+	UPROPERTY(BlueprintReadOnly,meta = (InitialValue = "Levelbased"), Category="MainAttributes")
+	FGameplayAttributeData MaxWalkSpeed;
+	PLAY_ATTRIBUTE_ACCESSORS(UGaMaMainAttributeSet, MaxWalkSpeed);
 };

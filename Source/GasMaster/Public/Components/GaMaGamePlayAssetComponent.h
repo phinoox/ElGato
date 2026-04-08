@@ -42,6 +42,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UGaMaGameplayAsset> GameplayAsset;
 		
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
+	TObjectPtr<UDataTable> AttributeTable;
+	
 	UFUNCTION(BlueprintCallable)
 	void SwitchAbilitySet(int index);
 	

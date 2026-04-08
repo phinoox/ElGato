@@ -52,7 +52,6 @@ void UGaMaGamePlayAssetComponent::BeginPlay()
 		{
 			auto name = ability->GetName();
 			auto containerinfo = container.ToString();
-				//auto info = ability->
 			UE_LOG(LogGasMaster,Verbose, TEXT("Ability %s failed due to %s"),*name,*containerinfo);
 		});
 		EffectContext = AbilitySystemComponent->MakeEffectContext();
@@ -119,7 +118,6 @@ TSubclassOf<UGaMaGameplayEffectBase> UGaMaGamePlayAssetComponent::GetEffect(int 
 
 void UGaMaGamePlayAssetComponent::Initialize()
 {
-	//InitializeAttributes();
 	InitializeEffects();
 	InitializeAbilities();
 }
@@ -144,7 +142,9 @@ void UGaMaGamePlayAssetComponent::InitializeAbilities()
 		for (FDataTableRowHandle Ability : GameplayAsset->AbilitySets[0]->Abilities)
 		{
 			auto AbilityEntry = Ability.GetRow<FGaMaAbilityData>(TEXT("AbilityData"));
-			UE_LOG(LogTemp,Display, TEXT("Trying to add ability %s character"),*AbilityEntry->DisplayName.ToString());
+			if (!AbilityEntry)
+				continue;
+			UE_LOG(LogGasMaster,Display, TEXT("Trying to add ability %s character"),*AbilityEntry->DisplayName.ToString());
 			TSubclassOf<UGaMaGameplayAbilityBase> abilityclass = AbilityEntry->AbilityClass;
 			FGameplayAbilitySpec AbilitySpec(*abilityclass);
 			AbilitySystemComponent->GiveAbility(AbilitySpec);

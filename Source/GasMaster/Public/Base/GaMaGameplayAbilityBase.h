@@ -17,6 +17,9 @@ public:
 	UGaMaGameplayAbilityBase();
 	
 public:
+	
+	
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/GasMaster.GaMaAbilityData"))
 	TObjectPtr<UDataTable> AbilityTable;
 	

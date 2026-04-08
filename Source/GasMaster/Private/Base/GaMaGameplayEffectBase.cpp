@@ -5,6 +5,7 @@
 
 #include "DataTableEditorUtils.h"
 #include "FileHelpers.h"
+#include "GaMaLog.h"
 #include "Data//GaMaEffectSetAsset.h"
 #include "UObject/ObjectSaveContext.h"
 
@@ -30,7 +31,7 @@ void UGaMaGameplayEffectBase::AddToTable()
 {
 	if (!IsValid(EffectTable))
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Trying to add Effect to inavlid table"));
+		UE_LOG(LogGasMaster,Warning, TEXT("Trying to add Effect to inavlid table"));
 		return;
 	}
 	FGaMaEffectData EffectAsset = FGaMaEffectData();
@@ -42,11 +43,11 @@ void UGaMaGameplayEffectBase::AddToTable()
 	bool success = EffectTable->Modify();
 	if (success)
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Added Effect to table: %s"), *Name);
+		UE_LOG(LogGasMaster,Warning, TEXT("Added Effect to table: %s"), *Name);
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Could not add Effect to table: %s"), *Name);
+		UE_LOG(LogGasMaster,Warning, TEXT("Could not add Effect to table: %s"), *Name);
 	}
 	UEditorLoadingAndSavingUtils::SavePackages({EffectTable->GetPackage()}, false);
 	FDataTableEditorUtils::BroadcastPostChange(EffectTable, FDataTableEditorUtils::EDataTableChangeInfo::RowList);

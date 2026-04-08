@@ -40,7 +40,7 @@ bool UGA_Attribute_Cost::CommitAbilityCost(const FGameplayAbilitySpecHandle Hand
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	FGameplayTagContainer* OptionalRelevantTags)
 {
-	if (!CostGameplayEffectClass->IsValidLowLevelFast())
+	if (!CostGameplayEffectClass)
 		return true;
 	if (!CheckCost(Handle, ActorInfo, OptionalRelevantTags))
 		return false;
@@ -72,7 +72,7 @@ bool UGA_Attribute_Cost::CommitAbilityCooldown(const FGameplayAbilitySpecHandle 
 	const bool ForceCooldown, FGameplayTagContainer* OptionalRelevantTags)
 {
 	ActivationCount++;
-	if (!CooldownGameplayEffectClass->IsValidLowLevel())
+	if (!CooldownGameplayEffectClass)
 		return true;
 	if (CooldownTriggerUses!=0)
 	{

@@ -30,7 +30,7 @@ void UGaMaGameplayAbilityBase::AddToTable()
 {
 	if (!IsValid(AbilityTable))
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Trying to add ability to inavlid table"));
+		UE_LOG(LogGasMaster,Warning, TEXT("Trying to add ability to inavlid table"));
 		return;
 	}
 	FGaMaAbilityData AbilityAsset = FGaMaAbilityData();
@@ -42,17 +42,14 @@ void UGaMaGameplayAbilityBase::AddToTable()
 	bool success = AbilityTable->Modify();
 	if (success)
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Added ability to table: %s"), *Name);
+		UE_LOG(LogGasMaster,Warning, TEXT("Added ability to table: %s"), *Name);
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning, TEXT("Could not add ability to table: %s"), *Name);
+		UE_LOG(LogGasMaster,Warning, TEXT("Could not add ability to table: %s"), *Name);
 	}
 	UEditorLoadingAndSavingUtils::SavePackages({AbilityTable->GetPackage()}, false);
 	FDataTableEditorUtils::BroadcastPostChange(AbilityTable, FDataTableEditorUtils::EDataTableChangeInfo::RowList);
-	
-	//DataTable->MarkPackageDirty();
-	//DataTable->PostEditChange();
 }
 
 

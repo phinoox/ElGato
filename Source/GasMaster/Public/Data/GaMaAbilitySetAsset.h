@@ -36,7 +36,7 @@ class GASMASTER_API UGaMaAbilitySetAsset : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/CorruptedCold.GaMaAbilityData"))
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/GasMaster.GaMaAbilityData"))
 	TArray<FDataTableRowHandle> Abilities;
 	
 	UFUNCTION()

@@ -36,7 +36,7 @@ class GASMASTER_API UGaMaEffectSetAsset : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/CorruptedCold.GaMaEffectData"))
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/GasMaster.GaMaEffectData"))
 	TArray<FDataTableRowHandle> Effects;
 	
 	UFUNCTION()

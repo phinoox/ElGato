@@ -28,7 +28,12 @@ public class GasMaster : ModuleRules
 				"Core",
 				"GameplayAbilities",
 				"GameplayTags",
-				"GameplayTasks",
+				"GameplayTasks", 
+				"Blutility",
+				"StructUtils",
+				"Json",
+				"JsonUtilities",
+				"ContentBrowser"
 				
 				
 			}
@@ -44,7 +49,8 @@ public class GasMaster : ModuleRules
 				"SlateCore",
 				"EditorScriptingUtilities",
 				"UnrealEd",
-				"Projects"
+				"Projects",
+				
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

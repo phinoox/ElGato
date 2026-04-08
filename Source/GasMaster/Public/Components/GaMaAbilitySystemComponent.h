@@ -20,8 +20,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+	
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAbilityEnded, UGameplayAbility*, Ability,FGameplayTagContainer,AssetTags,bool, bWasCanceled);
+	UPROPERTY(BlueprintAssignable)
+	FOnAbilityEnded OnAbilityEnded;
+	
+	virtual void NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, bool bWasCancelled) override;
+	
+	UFUNCTION(BlueprintCallable)
+	FGameplayTagContainer GetAssetTags(UGameplayAbility* ability);
 };

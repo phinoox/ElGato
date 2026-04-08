@@ -60,6 +60,16 @@ void UGaMaMainAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffe
 		SetStamina(GetStamina());
 		OnStaminaChanged.Broadcast(Data.EvaluatedData.Magnitude, GetStamina());
 	}
+	else if (Data.EvaluatedData.Attribute == GetWalkSpeedFactorAttribute())
+	{
+		SetWalkSpeedFactor(GetWalkSpeedFactor());
+		OnWalkSpeedFactorChanged.Broadcast(Data.EvaluatedData.Magnitude, GetWalkSpeedFactor());
+	}
+	else if (Data.EvaluatedData.Attribute == GetMaxWalkSpeedAttribute())
+	{
+		SetMaxWalkSpeed(GetMaxWalkSpeed());
+		OnMaxWalkSpeedChanged.Broadcast(Data.EvaluatedData.Magnitude, GetMaxWalkSpeed());
+	}
 }
 
 void UGaMaMainAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
