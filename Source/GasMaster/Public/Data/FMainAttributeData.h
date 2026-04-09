@@ -21,7 +21,7 @@ struct FLeveledAttributeData : public FTableRowBase
 
 
 UCLASS()
-class GASMASTER_API UAttributeLibrary : public UBlueprintFunctionLibrary
+class ElGaTo_API UAttributeLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

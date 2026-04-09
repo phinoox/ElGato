@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class GASMASTER_API UGaToElementalAttributeSet : public UGaToBaseAttributeSet
+class ElGaTo_API UGaToElementalAttributeSet : public UGaToBaseAttributeSet
 {
 	GENERATED_BODY()
 	

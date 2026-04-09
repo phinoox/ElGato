@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class GASMASTER_API UGaToAbilitySystemsGlobal : public UAbilitySystemGlobals
+class ElGaTo_API UGaToAbilitySystemsGlobal : public UAbilitySystemGlobals
 {
 	GENERATED_BODY()
 public:

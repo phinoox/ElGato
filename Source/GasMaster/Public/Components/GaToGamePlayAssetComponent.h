@@ -10,7 +10,7 @@
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class GASMASTER_API UGaToGamePlayAssetComponent : public UActorComponent
+class ElGaTo_API UGaToGamePlayAssetComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

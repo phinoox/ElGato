@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "GasMaster",
+	"FriendlyName": "ElGaTo",
 	"Description": "PLugin for easier Gas handling",
 	"Category": "Other",
 	"CreatedBy": "Phantasmira",
@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "GasMaster",
+			"Name": "ElGaTo",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

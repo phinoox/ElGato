@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class GasMaster : ModuleRules
+public class ElGaTo : ModuleRules
 {
-	public GasMaster(ReadOnlyTargetRules Target) : base(Target)
+	public ElGaTo(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		

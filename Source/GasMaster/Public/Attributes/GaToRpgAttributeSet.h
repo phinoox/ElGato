@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class GASMASTER_API UGaToRpgAttributeSet : public UGaToBaseAttributeSet
+class ElGaTo_API UGaToRpgAttributeSet : public UGaToBaseAttributeSet
 {
 	GENERATED_BODY()
 	

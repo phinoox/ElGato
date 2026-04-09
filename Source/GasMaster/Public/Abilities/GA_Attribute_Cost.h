@@ -21,7 +21,7 @@ enum class EABilityInputId : uint8
  * 
  */
 UCLASS()
-class GASMASTER_API UGA_Attribute_Cost : public UGaToGameplayAbilityBase
+class ElGaTo_API UGA_Attribute_Cost : public UGaToGameplayAbilityBase
 {
 	GENERATED_BODY()
 public:

@@ -11,7 +11,7 @@ class UGaToBaseAttributeSet;
  * 
  */
 UCLASS()
-class GASMASTER_API UAttributeEditorFunctionLibrary : public UBlueprintFunctionLibrary
+class ElGaTo_API UAttributeEditorFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	

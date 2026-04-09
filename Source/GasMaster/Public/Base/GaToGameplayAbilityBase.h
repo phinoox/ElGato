@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class GASMASTER_API UGaToGameplayAbilityBase : public UGameplayAbility
+class ElGaTo_API UGaToGameplayAbilityBase : public UGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -20,7 +20,7 @@ public:
 	
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/GasMaster.GaToAbilityData"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/ElGaTo.GaToAbilityData"))
 	TObjectPtr<UDataTable> AbilityTable;
 	
 	UFUNCTION(BlueprintCallable)

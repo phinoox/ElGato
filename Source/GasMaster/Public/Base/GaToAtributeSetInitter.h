@@ -9,7 +9,7 @@
  * 
  */
 
-struct GASMASTER_API FGaToAtributeSetInitter : public FAttributeSetInitter
+struct ElGaTo_API FGaToAtributeSetInitter : public FAttributeSetInitter
 {
 	//GENERATED_BODY()
 public:

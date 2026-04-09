@@ -16,7 +16,7 @@ class UGaToGameplayAbilityBase;
 
 
 USTRUCT(BlueprintType)
-struct GASMASTER_API FGaToAbilityData : public FTableRowBase
+struct ElGaTo_API FGaToAbilityData : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -31,12 +31,12 @@ public:
 };
 
 UCLASS(BlueprintType)
-class GASMASTER_API UGaToAbilitySetAsset : public UDataAsset
+class ElGaTo_API UGaToAbilitySetAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/GasMaster.GaToAbilityData"))
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/ElGaTo.GaToAbilityData"))
 	TArray<FDataTableRowHandle> Abilities;
 	
 	UFUNCTION()

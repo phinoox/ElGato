@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-class FGasMasterModule : public IModuleInterface
+class FElGaToModule : public IModuleInterface
 {
 public:
 

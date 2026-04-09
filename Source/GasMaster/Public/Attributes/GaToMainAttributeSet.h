@@ -12,7 +12,7 @@
  * Attributeset for basic Attributes common in most Games
  */
 UCLASS()
-class GASMASTER_API UGaToMainAttributeSet : public UGaToBaseAttributeSet
+class ElGaTo_API UGaToMainAttributeSet : public UGaToBaseAttributeSet
 {
 	GENERATED_BODY()
 	

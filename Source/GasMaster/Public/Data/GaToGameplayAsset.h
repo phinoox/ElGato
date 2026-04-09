@@ -14,7 +14,7 @@
  * 
  */
 UCLASS()
-class GASMASTER_API UGaToGameplayAsset : public UDataAsset
+class ElGaTo_API UGaToGameplayAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	

@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class GASMASTER_API UGaToGameplayEffectBase : public UGameplayEffect
+class ElGaTo_API UGaToGameplayEffectBase : public UGameplayEffect
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,7 @@ public:
 	
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/GasMaster.GaToEffectData"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/ElGaTo.GaToEffectData"))
 	TObjectPtr<UDataTable> EffectTable;
 	
 	UFUNCTION(BlueprintCallable)

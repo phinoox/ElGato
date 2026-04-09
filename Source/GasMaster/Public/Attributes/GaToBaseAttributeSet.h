@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPostGameplayEffectExecute, con
  * Basic AttributeSet with general events for changes
  */
 UCLASS()
-class GASMASTER_API UGaToBaseAttributeSet : public UAttributeSet
+class ElGaTo_API UGaToBaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 	

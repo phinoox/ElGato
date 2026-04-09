@@ -7,12 +7,12 @@ class UGaToAbilitySystemComponent;
 class UGaToMainAttributeSet;
 
 UINTERFACE(MinimalAPI,NotBlueprintable)
-class GASMASTER_API UGaToActorInterface : public UInterface
+class ElGaTo_API UGaToActorInterface : public UInterface
 {
 GENERATED_BODY()
 };
 
-class  GASMASTER_API IGaToActorInterface
+class  ElGaTo_API IGaToActorInterface
 {
 
 GENERATED_BODY()

@@ -13,7 +13,7 @@
  */
 
 USTRUCT(BlueprintType)
-struct  GASMASTER_API FGaToEffectData : public FTableRowBase
+struct  ElGaTo_API FGaToEffectData : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -31,12 +31,12 @@ public:
 
 
 UCLASS()
-class GASMASTER_API UGaToEffectSetAsset : public UDataAsset
+class ElGaTo_API UGaToEffectSetAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/GasMaster.GaToEffectData"))
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="AbilitySet",meta=(RowType="/Script/ElGaTo.GaToEffectData"))
 	TArray<FDataTableRowHandle> Effects;
 	
 	UFUNCTION()
