@@ -4,16 +4,16 @@
 #include "Editor/AttributeEditorFunctionLibrary.h"
 
 #include "ContentBrowserModule.h"
-#include "GaMaLog.h"
+#include "GaToLog.h"
 #include "ContentBrowserModule.h"
 #include "IContentBrowserSingleton.h"
 #include "AssetRegistry/AssetRegistryModule.h"
-#include "Attributes/GaMaBaseAttributeSet.h"
+#include "Attributes/GaToBaseAttributeSet.h"
 #include "Data/FMainAttributeData.h"
 #include "UObject/SavePackage.h"
 #include "Serialization/JsonSerializer.h"
 
-TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaMaBaseAttributeSet* AttributeSet)
+TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet)
 {
 	TArray<FString> ScalableAttributes;
 	
@@ -36,7 +36,7 @@ TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaMaBase
 	return ScalableAttributes;
 }
 
-UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaMaBaseAttributeSet* AttributeSet,FName AssetName,bool OnlyCurves)
+UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName AssetName,bool OnlyCurves)
 {
 	FString ContentPathString = TEXT("/Game/Data/");
 	ContentPathString = ContentPathString.Replace(TEXT("//"),TEXT("/"));
@@ -79,10 +79,10 @@ UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaMaBas
 
 	// Save the asset to disk
 	NewTable->MarkPackageDirty();
-	UE_LOG(LogGasMaster,Display,TEXT("Trying to save DataTable at %s"),*TablePathString);
+	UE_LOG(LogGaTo,Display,TEXT("Trying to save DataTable at %s"),*TablePathString);
 	FAssetRegistryModule::AssetCreated(NewTable);
 	bool success= UPackage::SavePackage(NewPackage,NewTable,*ContentPath,SaveArgs);
-	UE_LOG(LogGasMaster,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
+	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
 	NewPackage->FullyLoad();
 	NewPackage->Rename(*NewPackage->GetName());
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::Get().LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
@@ -95,7 +95,7 @@ UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaMaBas
 	return NewTable;
 }
 
-FString UAttributeEditorFunctionLibrary::CreateJsonForAttributeSet(UGaMaBaseAttributeSet* AttributeSet)
+FString UAttributeEditorFunctionLibrary::CreateJsonForAttributeSet(UGaToBaseAttributeSet* AttributeSet)
 {
 	TArray<FString> ScalableAttributes = GetScalableAttributes(AttributeSet);
 	const FString AttributeTemplate ="(AttributeName=\"ShortName\",Attribute=FullName,AttributeOwner=None)";
@@ -160,14 +160,13 @@ UCurveTable* UAttributeEditorFunctionLibrary::CreateCurveTable(TArray<FString> A
 	FSavePackageArgs SaveArgs;
 	SaveArgs.TopLevelFlags = RF_Public | RF_Standalone; // Flags for objects to save
 	SaveArgs.Error = GError;
-	SaveArgs.SaveFlags = SAVE_KeepGUID ; // Flags to control saving behavior
 
 	// Save the asset to disk
 	NewTable->MarkPackageDirty();
-	UE_LOG(LogGasMaster,Display,TEXT("Trying to save curvtetable at %s"),*TablePathString);
+	UE_LOG(LogGaTo,Display,TEXT("Trying to save curvtetable at %s"),*TablePathString);
 	FAssetRegistryModule::AssetCreated(NewTable);
 	bool success = UPackage::SavePackage(NewPackage,NewTable,*ContentPath,SaveArgs);
-	UE_LOG(LogGasMaster,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
+	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
 	NewPackage->Rename(*NewPackage->GetName());
 	return NewTable;
 }

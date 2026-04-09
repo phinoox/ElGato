@@ -4,13 +4,13 @@
 #include "Abilities/GA_Attribute_Cost.h"
 
 #include "AbilitySystemComponent.h"
-#include "GaMaLog.h"
-#include "Attributes/GaMaTags.h"
+#include "GaToLog.h"
+#include "Attributes/GaToTags.h"
 
 UGA_Attribute_Cost::UGA_Attribute_Cost()
 {
-	ActivationOwnedTags.AddTag(GaMaTags::TAG_Abilities_General_Active);
-	ActivationBlockedTags.AddTag(GaMaTags::TAG_Character_Status_Dead);
+	ActivationOwnedTags.AddTag(GaToTags::TAG_Abilities_General_Active);
+	ActivationBlockedTags.AddTag(GaToTags::TAG_Character_Status_Dead);
 	LastActivationTime = FDateTime::Now();
 }
 
@@ -31,7 +31,7 @@ bool UGA_Attribute_Cost::CheckCost(const FGameplayAbilitySpecHandle Handle, cons
 	auto CostCheck = ActorInfo->AbilitySystemComponent->GetNumericAttribute(CostAttribute) >= AbilityCosts;
 	if (!CostCheck)
 	{
-		UE_LOG(LogGasMaster,Verbose, TEXT("Could ot   spend   %s   to   activate   ability   %s."),*CostAttribute.AttributeName, *GetClass()->GetName());
+		UE_LOG(LogGaTo,Verbose, TEXT("Could ot   spend   %s   to   activate   ability   %s."),*CostAttribute.AttributeName, *GetClass()->GetName());
 	}
 	return CostCheck;
 }
@@ -62,7 +62,7 @@ bool UGA_Attribute_Cost::CanActivateAbility(const FGameplayAbilitySpecHandle Han
 	bool CanActivate = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 	if (!CanActivate)
 	{
-		UE_LOG(LogGasMaster,Verbose, TEXT("could not activate ability"));
+		UE_LOG(LogGaTo,Verbose, TEXT("could not activate ability"));
 	}
 	return CanActivate;
 }

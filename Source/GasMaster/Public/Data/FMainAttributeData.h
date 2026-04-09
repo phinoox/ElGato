@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Attributes/GaMaMainAttributeSet.h"
+#include "Attributes/GaToMainAttributeSet.h"
 #include "FMainAttributeData.generated.h"
 
 USTRUCT(BlueprintType)

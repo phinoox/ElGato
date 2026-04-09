@@ -6,7 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AttributeEditorFunctionLibrary.generated.h"
 
-class UGaMaBaseAttributeSet;
+class UGaToBaseAttributeSet;
 /**
  * 
  */
@@ -17,13 +17,13 @@ class GASMASTER_API UAttributeEditorFunctionLibrary : public UBlueprintFunctionL
 	
 public:
 	UFUNCTION(BlueprintCallable,CallInEditor)
-	static TArray<FString> GetScalableAttributes(UGaMaBaseAttributeSet* AttributeSet);
+	static TArray<FString> GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet);
 	
 	UFUNCTION(BlueprintCallable,CallInEditor)
-	static UDataTable* CreateTableForAttributeSet(UGaMaBaseAttributeSet* AttributeSet,FName AssetName,bool OnlyCurves=false);
+	static UDataTable* CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName AssetName,bool OnlyCurves=false);
 	
 	UFUNCTION(BlueprintCallable,CallInEditor)
-	static FString CreateJsonForAttributeSet(UGaMaBaseAttributeSet* AttributeSet);
+	static FString CreateJsonForAttributeSet(UGaToBaseAttributeSet* AttributeSet);
 	
 	static FString GetShortName(const FString& AttributeName);
 	

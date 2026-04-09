@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "NativeGameplayTags.h"
 #include "Abilities/GameplayAbility.h"
-#include "Base/GaMaGameplayAbilityBase.h"
+#include "Base/GaToGameplayAbilityBase.h"
 #include "GA_Attribute_Cost.generated.h"
 
 UENUM(BlueprintType)
@@ -21,7 +21,7 @@ enum class EABilityInputId : uint8
  * 
  */
 UCLASS()
-class GASMASTER_API UGA_Attribute_Cost : public UGaMaGameplayAbilityBase
+class GASMASTER_API UGA_Attribute_Cost : public UGaToGameplayAbilityBase
 {
 	GENERATED_BODY()
 public:
