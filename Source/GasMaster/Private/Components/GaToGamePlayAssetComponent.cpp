@@ -9,6 +9,7 @@
 #include "Data/GaToEffectSetAsset.h"
 #include "Attributes/GaToMainAttributeSet.h"
 #include "Base/GaToGameplayAbilityBase.h"
+#include "Data/FLeveledAttributeData.h"
 
 
 // Sets default values for this component's properties
@@ -57,6 +58,7 @@ void UGaToGamePlayAssetComponent::BeginPlay()
 		EffectContext.AddSourceObject(GetOwner());
 		
 		InitializeAttributes();
+		InitializeTags();
 		
 		if (!GameplayAssetRef.IsNull())
 		{
@@ -123,13 +125,29 @@ void UGaToGamePlayAssetComponent::Initialize()
 
 void UGaToGamePlayAssetComponent::InitializeAttributes()
 {
-	if (!IsValid(AttributeInitEffect))
+	if (!IsValid(AttributeTable))
 		return;
-	FGameplayEffectSpecHandle Spec = AbilitySystemComponent->MakeOutgoingSpec(AttributeInitEffect,1,EffectContext);
-	if (Spec.IsValid())
+	for (auto RowName : AttributeTable->GetRowNames())
 	{
-		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*Spec.Data.Get());
+		float AttributeValue;
+		auto Row = AttributeTable->FindRow<FLeveledAttributeData>(RowName,"AttributeInitialization");
+		if (Row->Value.CurveTable != nullptr)
+		{
+			AttributeValue = Row->Value.Eval(CharacterLevel,RowName.ToString());
+			
+		}
+		else
+		{
+			AttributeValue = Row->FallbackValue;
+		}
+		AbilitySystemComponent->SetNumericAttributeBase(Row->Attribute,AttributeValue);
 	}
+	
+}
+
+void UGaToGamePlayAssetComponent::InitializeTags()
+{
+	AbilitySystemComponent->AddLooseGameplayTags(InitialTags);
 }
 
 void UGaToGamePlayAssetComponent::InitializeAbilities()

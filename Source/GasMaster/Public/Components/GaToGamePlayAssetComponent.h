@@ -10,7 +10,7 @@
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class ElGaTo_API UGaToGamePlayAssetComponent : public UActorComponent
+class ELGATO_API UGaToGamePlayAssetComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -41,6 +41,9 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UGaToGameplayAsset> GameplayAsset;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
+	FGameplayTagContainer InitialTags;
 		
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UDataTable> AttributeTable;
@@ -53,15 +56,16 @@ public:
 	
 	UFUNCTION()
 	TSubclassOf<UGaToGameplayEffectBase> GetEffect(int index);
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
-	TSubclassOf<UGaToGameplayEffectBase> AttributeInitEffect;
+
 	
 private:
 	void Initialize();
 	void InitializeAttributes();
 	void InitializeAbilities();
+	void InitializeTags();
 	void InitializeEffects();
 	int CurrentAbilitySet = 0;
 	TArray<FGameplayAbilitySpecHandle> CurrentHandles;
 };
+
+

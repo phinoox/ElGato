@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class ElGaTo_API UGaToAbilitySystemsGlobal : public UAbilitySystemGlobals
+class ELGATO_API UGaToAbilitySystemsGlobal : public UAbilitySystemGlobals
 {
 	GENERATED_BODY()
 public:

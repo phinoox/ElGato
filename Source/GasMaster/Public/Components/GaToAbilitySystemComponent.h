@@ -8,7 +8,7 @@
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class ElGaTo_API UGaToAbilitySystemComponent : public UAbilitySystemComponent
+class ELGATO_API UGaToAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 

@@ -14,7 +14,7 @@
  * 
  */
 UCLASS()
-class ElGaTo_API UGaToGameplayAsset : public UDataAsset
+class ELGATO_API UGaToGameplayAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	

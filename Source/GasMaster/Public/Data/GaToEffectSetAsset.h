@@ -13,7 +13,7 @@
  */
 
 USTRUCT(BlueprintType)
-struct  ElGaTo_API FGaToEffectData : public FTableRowBase
+struct  ELGATO_API FGaToEffectData : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -31,7 +31,7 @@ public:
 
 
 UCLASS()
-class ElGaTo_API UGaToEffectSetAsset : public UDataAsset
+class ELGATO_API UGaToEffectSetAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	

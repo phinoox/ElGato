@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class ElGaTo_API UGaToGameplayEffectBase : public UGameplayEffect
+class ELGATO_API UGaToGameplayEffectBase : public UGameplayEffect
 {
 	GENERATED_BODY()
 	

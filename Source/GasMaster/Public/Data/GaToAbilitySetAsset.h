@@ -16,7 +16,7 @@ class UGaToGameplayAbilityBase;
 
 
 USTRUCT(BlueprintType)
-struct ElGaTo_API FGaToAbilityData : public FTableRowBase
+struct ELGATO_API FGaToAbilityData : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -31,7 +31,7 @@ public:
 };
 
 UCLASS(BlueprintType)
-class ElGaTo_API UGaToAbilitySetAsset : public UDataAsset
+class ELGATO_API UGaToAbilitySetAsset : public UDataAsset
 {
 	GENERATED_BODY()
 	

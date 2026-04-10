@@ -10,58 +10,58 @@ namespace GaToTags
 	/**
 	 * Tag for walking mode
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Walk);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Walk);
 
 	/**
 	 * Tag for running mode
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Run);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Run);
 	
 	/**
 	 * Tag for Swimming mode
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Swimming);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Swimming);
 	
 	/**
 	 * Tag for Flying mode
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Flying);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Movement_Mode_Flying);
 	
 	/**
 	 * Status tag for damaged Characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Teleported);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Teleported);
 	
 	/**
 	 * Status Tag for stunned characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Stunned);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Stunned);
 	
 	/**
 	 * Status Tag for immobile characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Immobile);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Immobile);
 	
 	/**
 	 * Status Tag for immobile characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Invincible);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Invincible);
 	
 	/**
 	 * Status tag for damaged Characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Damaged);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Damaged);
 	/**
 	 * Status tag for dead Characters
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Dead);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Dead);
 	/**
 	 * General Tag for active Abilities 
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Abilities_General_Active);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Abilities_General_Active);
 	/**
 	 * General Tag for active Abilities 
 	 */
-	ElGaTo_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Hit);
+	ELGATO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Character_Status_Hit);
 
 }

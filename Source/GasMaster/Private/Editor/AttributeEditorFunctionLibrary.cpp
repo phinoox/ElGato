@@ -9,9 +9,19 @@
 #include "IContentBrowserSingleton.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Attributes/GaToBaseAttributeSet.h"
-#include "Data/FMainAttributeData.h"
+#include "Data/FLeveledAttributeData.h"
 #include "UObject/SavePackage.h"
 #include "Serialization/JsonSerializer.h"
+
+FAssetPathInfo::FAssetPathInfo(FString CharacterName)
+{
+	static FString ContentPath = TEXT("/Game/Data/");
+	
+	this->CharacterName = CharacterName;
+	this->AssetPath = ContentPath + CharacterName + "/";
+	this->LongAssetPath = FPackageName::LongPackageNameToFilename(AssetPath);
+	
+}
 
 TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet)
 {
@@ -36,27 +46,22 @@ TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaToBase
 	return ScalableAttributes;
 }
 
-UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName AssetName,bool OnlyCurves)
+UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName CharacterName,bool OnlyCurves)
 {
-	FString ContentPathString = TEXT("/Game/Data/");
-	ContentPathString = ContentPathString.Replace(TEXT("//"),TEXT("/"));
-	ContentPathString.Append(AssetName.ToString());
-	FString TableAssetName = "DT_Attributes_" + AssetName.ToString();
-	auto TablePathString = ContentPathString + "/" + TableAssetName;
-	//auto ContentPath = TablePathString.GetCharArray().GetData();
-	auto ContentPath = FPackageName::LongPackageNameToFilename(TablePathString,FPackageName::GetAssetPackageExtension());
-	UPackage* NewPackage = CreatePackage(*TablePathString);
-	NewPackage->FullyLoad();	
-		
+	if (AttributeSet == nullptr)
+		return nullptr;
+	FString TableAssetName = "DT_Attributes_" + CharacterName.ToString();
+	
+	FAssetPathInfo AssetPathInfo(CharacterName.ToString());
+	
 	TArray<FString> ScalableAttributes = GetScalableAttributes(AttributeSet);
-	UCurveTable* LevelCurves = CreateCurveTable(ScalableAttributes,AssetName);
+	UCurveTable* LevelCurves = CreateCurveTable(ScalableAttributes,AssetPathInfo,CharacterName);
 	
 	if (OnlyCurves)
 		return nullptr;
 	
-
-	EObjectFlags Flags = RF_Public | RF_Standalone;
-	UDataTable* NewTable = NewObject<UDataTable>(NewPackage,UDataTable::StaticClass(), FName(TableAssetName), Flags);
+	auto Package = CreateNewPackage(AssetPathInfo,TableAssetName);
+	UDataTable* NewTable = NewObject<UDataTable>(Package,UDataTable::StaticClass(), FName(TableAssetName), RF_Public |RF_Standalone);
 	
 	NewTable->RowStruct = FLeveledAttributeData::StaticStruct();
 	NewTable->CreateTableFromJSONString(CreateJsonForAttributeSet(AttributeSet));
@@ -70,23 +75,13 @@ UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBas
 		RowHandle->Value.RowName = RowName;
 		 
 	}
-	
-	
-	
-	FSavePackageArgs SaveArgs;
-	SaveArgs.TopLevelFlags = RF_Public | RF_Standalone; // Flags for objects to save
-	SaveArgs.SaveFlags = SAVE_None; // Flags to control saving behavior
 
 	// Save the asset to disk
 	NewTable->MarkPackageDirty();
-	UE_LOG(LogGaTo,Display,TEXT("Trying to save DataTable at %s"),*TablePathString);
-	FAssetRegistryModule::AssetCreated(NewTable);
-	bool success= UPackage::SavePackage(NewPackage,NewTable,*ContentPath,SaveArgs);
-	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
-	NewPackage->FullyLoad();
-	NewPackage->Rename(*NewPackage->GetName());
+	SaveNewPackage(Package,NewTable,AssetPathInfo,TableAssetName);
+	
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::Get().LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
-
+	
 	TArray<UObject*> NewTables;
 	NewTables.Add(NewTable);
 	NewTables.Add(LevelCurves);
@@ -118,6 +113,7 @@ FString UAttributeEditorFunctionLibrary::CreateJsonForAttributeSet(UGaToBaseAttr
 		ChildObject->SetStringField("Name", ShortName);
 		ChildObject->SetStringField("Attribute", AttributeString);
 		ChildObject->SetStringField("Value", CurveTableTemplate);
+		ChildObject->SetNumberField("FallbackValue",0);
 
 		// Add child to the array
 		PropertiesList.Add(MakeShareable(new FJsonValueObject(ChildObject)));
@@ -141,32 +137,57 @@ FString UAttributeEditorFunctionLibrary::GetShortName(const FString& AttributeNa
 	return ShortName;
 }
 
-UCurveTable* UAttributeEditorFunctionLibrary::CreateCurveTable(TArray<FString> AttributeNames,FName AssetName)
+UCurveTable* UAttributeEditorFunctionLibrary::CreateCurveTable(TArray<FString> AttributeNames,FAssetPathInfo AssetPathInfo,const FName AssetName)
 {
-	FString ContentPathString = TEXT("/Game/Data/");
-	ContentPathString = ContentPathString.Replace(TEXT("//"),TEXT("/"));
-	ContentPathString.Append(AssetName.ToString());
 	FString TableAssetName = "CT_AttributeLevels_" + AssetName.ToString();
-	auto TablePathString = ContentPathString + "/" + TableAssetName;
-	auto ContentPath = FPackageName::LongPackageNameToFilename(TablePathString,FPackageName::GetAssetPackageExtension());
-	UPackage* NewPackage = CreatePackage(*TablePathString);
-	NewPackage->FullyLoad();
-	UCurveTable* NewTable = NewObject<UCurveTable>(NewPackage,UCurveTable::StaticClass(),FName(TableAssetName),RF_Public |RF_Standalone);
+	//need to create package upfront so we can set it as outer else we crash 
+	auto Package = CreateNewPackage(AssetPathInfo,TableAssetName);
+	UCurveTable* NewTable = NewObject<UCurveTable>(Package,UCurveTable::StaticClass(),FName(TableAssetName),RF_Public |RF_Standalone);
+	NewTable->Modify();
 	for (auto AttributeName : AttributeNames)
 	{
-		auto curve = NewTable->AddSimpleCurve(FName(GetShortName(AttributeName)));
-		curve.AddKey(1,1);
+		FSimpleCurve curve = NewTable->AddSimpleCurve(FName(GetShortName(AttributeName)));
+		
 	}
-	FSavePackageArgs SaveArgs;
-	SaveArgs.TopLevelFlags = RF_Public | RF_Standalone; // Flags for objects to save
-	SaveArgs.Error = GError;
+	float NewKeyTime = 1;
+	for (const TPair<FName, FRealCurve*>& CurveRow : NewTable->GetRowMap())
+	{
+		FRealCurve* Curve = CurveRow.Value;
+		Curve->UpdateOrAddKey(NewKeyTime, Curve->Eval(NewKeyTime,1));
+	}
 
 	// Save the asset to disk
 	NewTable->MarkPackageDirty();
-	UE_LOG(LogGaTo,Display,TEXT("Trying to save curvtetable at %s"),*TablePathString);
-	FAssetRegistryModule::AssetCreated(NewTable);
-	bool success = UPackage::SavePackage(NewPackage,NewTable,*ContentPath,SaveArgs);
-	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
-	NewPackage->Rename(*NewPackage->GetName());
+	SaveNewPackage(Package,NewTable,AssetPathInfo,TableAssetName);
 	return NewTable;
+}
+
+void UAttributeEditorFunctionLibrary::CreateGameplayAsset(FName AssetName)
+{
+//	auto GamePlayAsset = NewObject
+}
+
+UPackage* UAttributeEditorFunctionLibrary::CreateNewPackage(FAssetPathInfo AssetPathInfo,FString AssetName)
+{
+	auto ShortPackagePath = AssetPathInfo.AssetPath + AssetName;
+	
+	UPackage* NewPackage = CreatePackage(*ShortPackagePath);
+	NewPackage->FullyLoad();
+
+	return NewPackage;	
+}
+
+void UAttributeEditorFunctionLibrary::SaveNewPackage(UPackage* Package, UObject* NewAsset,FAssetPathInfo AssetPathInfo, FString AssetName)
+{
+	auto NewAssetPath = AssetPathInfo.AssetPath + AssetName;
+	
+	FSavePackageArgs SaveArgs;
+	SaveArgs.TopLevelFlags = RF_Public | RF_Standalone; // Flags for objects to save
+	SaveArgs.Error = GError;
+	SaveArgs.SaveFlags = SAVE_KeepGUID;
+
+	auto ContentPath = FPackageName::LongPackageNameToFilename(NewAssetPath,FPackageName::GetAssetPackageExtension());
+	FAssetRegistryModule::AssetCreated(NewAsset);
+	bool success = UPackage::SavePackage(Package,NewAsset,*ContentPath,SaveArgs);
+	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));
 }

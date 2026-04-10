@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class ElGaTo_API UGaToGameplayAbilityBase : public UGameplayAbility
+class ELGATO_API UGaToGameplayAbilityBase : public UGameplayAbility
 {
 	GENERATED_BODY()
 public:

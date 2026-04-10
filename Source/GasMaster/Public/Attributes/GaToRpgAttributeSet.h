@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class ElGaTo_API UGaToRpgAttributeSet : public UGaToBaseAttributeSet
+class ELGATO_API UGaToRpgAttributeSet : public UGaToBaseAttributeSet
 {
 	GENERATED_BODY()
 	

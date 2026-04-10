@@ -9,7 +9,7 @@
  * 
  */
 
-struct ElGaTo_API FGaToAtributeSetInitter : public FAttributeSetInitter
+struct ELGATO_API FGaToAtributeSetInitter : public FAttributeSetInitter
 {
 	//GENERATED_BODY()
 public:
