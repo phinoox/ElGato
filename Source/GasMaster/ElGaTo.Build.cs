@@ -33,8 +33,9 @@ public class ElGaTo : ModuleRules
 				"StructUtils",
 				"Json",
 				"JsonUtilities",
-				"ContentBrowser"
-				
+				"ContentBrowser",
+				"ToolMenus",
+				"ContentBrowserData"
 				
 			}
 			);
@@ -49,7 +50,7 @@ public class ElGaTo : ModuleRules
 				"SlateCore",
 				"EditorScriptingUtilities",
 				"UnrealEd",
-				"Projects",
+				"Projects", "DataIngestCore",
 				
 				// ... add private dependencies that you statically link with here ...	
 			}

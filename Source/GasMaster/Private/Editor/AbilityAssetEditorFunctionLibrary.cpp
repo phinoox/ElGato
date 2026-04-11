@@ -1,29 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Editor/AttributeEditorFunctionLibrary.h"
+#include "Editor/AbilityAssetEditorFunctionLibrary.h"
 
 #include "ContentBrowserModule.h"
 #include "GaToLog.h"
 #include "ContentBrowserModule.h"
+#include "ElGaToSettings.h"
 #include "IContentBrowserSingleton.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Attributes/GaToBaseAttributeSet.h"
 #include "Data/FLeveledAttributeData.h"
+#include "Data/GaToGameplayAsset.h"
 #include "UObject/SavePackage.h"
 #include "Serialization/JsonSerializer.h"
 
 FAssetPathInfo::FAssetPathInfo(FString CharacterName)
 {
-	static FString ContentPath = TEXT("/Game/Data/");
-	
+	static const UElGaToSettings* Settings = GetDefault<UElGaToSettings>();
+	static FString ContentPath = Settings->AssetBasePath.Path +"/";
 	this->CharacterName = CharacterName;
 	this->AssetPath = ContentPath + CharacterName + "/";
 	this->LongAssetPath = FPackageName::LongPackageNameToFilename(AssetPath);
 	
 }
 
-TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet)
+TArray<FString> UAbilityAssetEditorFunctionLibrary::GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet)
 {
 	TArray<FString> ScalableAttributes;
 	
@@ -46,7 +48,7 @@ TArray<FString> UAttributeEditorFunctionLibrary::GetScalableAttributes(UGaToBase
 	return ScalableAttributes;
 }
 
-UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName CharacterName,bool OnlyCurves)
+UDataTable* UAbilityAssetEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName CharacterName,bool OnlyCurves)
 {
 	if (AttributeSet == nullptr)
 		return nullptr;
@@ -59,8 +61,8 @@ UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBas
 	
 	if (OnlyCurves)
 		return nullptr;
-	
-	auto Package = CreateNewPackage(AssetPathInfo,TableAssetName);
+
+	UPackage* Package = CreateNewPackage(AssetPathInfo, TableAssetName);
 	UDataTable* NewTable = NewObject<UDataTable>(Package,UDataTable::StaticClass(), FName(TableAssetName), RF_Public |RF_Standalone);
 	
 	NewTable->RowStruct = FLeveledAttributeData::StaticStruct();
@@ -90,14 +92,14 @@ UDataTable* UAttributeEditorFunctionLibrary::CreateTableForAttributeSet(UGaToBas
 	return NewTable;
 }
 
-FString UAttributeEditorFunctionLibrary::CreateJsonForAttributeSet(UGaToBaseAttributeSet* AttributeSet)
+FString UAbilityAssetEditorFunctionLibrary::CreateJsonForAttributeSet(UGaToBaseAttributeSet* AttributeSet)
 {
 	TArray<FString> ScalableAttributes = GetScalableAttributes(AttributeSet);
 	const FString AttributeTemplate ="(AttributeName=\"ShortName\",Attribute=FullName,AttributeOwner=None)";
 	const FString CurveTableTemplate ="(CurveTable=\"/Script/Engine.CurveTable'TablePath'\",RowName=\"ShortName\")";
 	
 	TArray<TSharedPtr<FJsonValue>> PropertiesList;
-	for (auto AttributeName : ScalableAttributes)
+	for (FString AttributeName : ScalableAttributes)
 	{
 		TSharedRef<FJsonObject> ChildObject = MakeShareable(new FJsonObject());
         FString ShortName = GetShortName(AttributeName);
@@ -130,25 +132,27 @@ FString UAttributeEditorFunctionLibrary::CreateJsonForAttributeSet(UGaToBaseAttr
 	return OutputString;
 }
 
-FString UAttributeEditorFunctionLibrary::GetShortName(const FString& AttributeName)
+FString UAbilityAssetEditorFunctionLibrary::GetShortName(const FString& AttributeName)
 {
 	FString ShortName;
 	AttributeName.Split(":",nullptr,&ShortName);
 	return ShortName;
 }
 
-UCurveTable* UAttributeEditorFunctionLibrary::CreateCurveTable(TArray<FString> AttributeNames,FAssetPathInfo AssetPathInfo,const FName AssetName)
+UCurveTable* UAbilityAssetEditorFunctionLibrary::CreateCurveTable(TArray<FString> AttributeNames,const FAssetPathInfo& AssetPathInfo,const FName AssetName)
 {
 	FString TableAssetName = "CT_AttributeLevels_" + AssetName.ToString();
 	//need to create package upfront so we can set it as outer else we crash 
-	auto Package = CreateNewPackage(AssetPathInfo,TableAssetName);
+	UPackage* Package = CreateNewPackage(AssetPathInfo, TableAssetName);
+	//remember to create the object with a proper unique name else it won't show up in the content browser
 	UCurveTable* NewTable = NewObject<UCurveTable>(Package,UCurveTable::StaticClass(),FName(TableAssetName),RF_Public |RF_Standalone);
 	NewTable->Modify();
-	for (auto AttributeName : AttributeNames)
+	for (FString AttributeName : AttributeNames)
 	{
 		FSimpleCurve curve = NewTable->AddSimpleCurve(FName(GetShortName(AttributeName)));
 		
 	}
+	// code stolen from Source/Editor/CurveTableEditor/Private/CurveTableEditor.cpp
 	float NewKeyTime = 1;
 	for (const TPair<FName, FRealCurve*>& CurveRow : NewTable->GetRowMap())
 	{
@@ -162,14 +166,20 @@ UCurveTable* UAttributeEditorFunctionLibrary::CreateCurveTable(TArray<FString> A
 	return NewTable;
 }
 
-void UAttributeEditorFunctionLibrary::CreateGameplayAsset(FName AssetName)
+void UAbilityAssetEditorFunctionLibrary::CreateGameplayAsset(const FAssetPathInfo& AssetPathInfo,FName AssetName)
 {
-//	auto GamePlayAsset = NewObject
+	FString TableAssetName = "CT_AttributeLevels_" + AssetName.ToString();
+	UPackage* Package = CreateNewPackage(AssetPathInfo, TableAssetName);
+	UGaToGameplayAsset* GamePlayAsset = NewObject<UGaToGameplayAsset>(Package, UGaToGameplayAsset::StaticClass(),
+	                                                                  FName(TableAssetName), RF_Public | RF_Standalone);
+	
+//	GamePlayAsset.
+	
 }
 
-UPackage* UAttributeEditorFunctionLibrary::CreateNewPackage(FAssetPathInfo AssetPathInfo,FString AssetName)
+UPackage* UAbilityAssetEditorFunctionLibrary::CreateNewPackage(const FAssetPathInfo& AssetPathInfo,FString AssetName)
 {
-	auto ShortPackagePath = AssetPathInfo.AssetPath + AssetName;
+	FString ShortPackagePath = AssetPathInfo.AssetPath + AssetName;
 	
 	UPackage* NewPackage = CreatePackage(*ShortPackagePath);
 	NewPackage->FullyLoad();
@@ -177,16 +187,17 @@ UPackage* UAttributeEditorFunctionLibrary::CreateNewPackage(FAssetPathInfo Asset
 	return NewPackage;	
 }
 
-void UAttributeEditorFunctionLibrary::SaveNewPackage(UPackage* Package, UObject* NewAsset,FAssetPathInfo AssetPathInfo, FString AssetName)
+void UAbilityAssetEditorFunctionLibrary::SaveNewPackage(UPackage* Package, UObject* NewAsset,const FAssetPathInfo& AssetPathInfo, FString AssetName)
 {
-	auto NewAssetPath = AssetPathInfo.AssetPath + AssetName;
+	FString NewAssetPath = AssetPathInfo.AssetPath + AssetName;
 	
 	FSavePackageArgs SaveArgs;
 	SaveArgs.TopLevelFlags = RF_Public | RF_Standalone; // Flags for objects to save
 	SaveArgs.Error = GError;
 	SaveArgs.SaveFlags = SAVE_KeepGUID;
 
-	auto ContentPath = FPackageName::LongPackageNameToFilename(NewAssetPath,FPackageName::GetAssetPackageExtension());
+	FString ContentPath = FPackageName::LongPackageNameToFilename(NewAssetPath,
+	                                                              FPackageName::GetAssetPackageExtension());
 	FAssetRegistryModule::AssetCreated(NewAsset);
 	bool success = UPackage::SavePackage(Package,NewAsset,*ContentPath,SaveArgs);
 	UE_LOG(LogGaTo,Display,TEXT("Save Curvtetable %s"),success ? TEXT("Successfull") : TEXT("Failed"));

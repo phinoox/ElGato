@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "AttributeEditorFunctionLibrary.generated.h"
+#include "AbilityAssetEditorFunctionLibrary.generated.h"
 
 USTRUCT()
 struct FAssetPathInfo
@@ -27,7 +27,7 @@ class UGaToBaseAttributeSet;
  * 
  */
 UCLASS()
-class ELGATO_API UAttributeEditorFunctionLibrary : public UBlueprintFunctionLibrary
+class ELGATO_API UAbilityAssetEditorFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
@@ -44,15 +44,15 @@ public:
 	static FString GetShortName(const FString& AttributeName);
 	
 	UFUNCTION()
-	static UCurveTable* CreateCurveTable(TArray<FString> AttributeNames,FAssetPathInfo AssetPathInfo,const FName AssetName);
-	
-	UFUNCTION(BlueprintCallable,CallInEditor)
-	static void CreateGameplayAsset(FName AssetName);
+	static UCurveTable* CreateCurveTable(TArray<FString> AttributeNames,const FAssetPathInfo& AssetPathInfo,const FName AssetName);
 	
 	UFUNCTION()
-	static UPackage* CreateNewPackage(FAssetPathInfo AssetPathInfo,FString AssetName);
+	static void CreateGameplayAsset(const FAssetPathInfo& AssetPathInfo,FName AssetName);
 	
 	UFUNCTION()
-	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,FAssetPathInfo AssetPathInfo,FString AssetName);
+	static UPackage* CreateNewPackage(const FAssetPathInfo& AssetPathInfo,FString AssetName);
+	
+	UFUNCTION()
+	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FAssetPathInfo& AssetPathInfo,FString AssetName);
 	
 };
