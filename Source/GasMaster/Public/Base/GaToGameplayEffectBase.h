@@ -18,9 +18,6 @@ public:
 	
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/ElGaTo.GaToEffectData"))
-	TObjectPtr<UDataTable> EffectTable;
-	
 	UFUNCTION(BlueprintCallable)
 	FName GetEffectName() const;
 #if WITH_EDITOR

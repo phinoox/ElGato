@@ -5,7 +5,10 @@
 
 #include "ContentBrowserItemPath.h"
 #include "ContentBrowserMenuContexts.h"
+#include "EngineUtils.h"
 #include "GaToLog.h"
+#include "Base/GaToGameplayAbilityBase.h"
+#include "Editor/AbilityEditorSubsystem.h"
 
 
 void FElGaToBrowserMenuExtension::Init()
@@ -63,10 +66,19 @@ void FElGaToBrowserMenuExtension::AddMenuEntry(UToolMenu* Menu)
 								return;
 							}
 							const TArray<FString>& SelectedPaths = Context->GetSelectedPackagePaths();
-							for (auto Item : SelectedPaths)
+							for (auto Path : SelectedPaths)
 							{
-								// Action logic here
-								UE_LOG(LogTemp, Log, TEXT("Custom action triggered on %s"),*Item);
+								TArray<UObject*> AbilityAssets;
+								EngineUtils::FindOrLoadAssetsByPath(Path, AbilityAssets, EngineUtils::ATL_Regular);
+								
+								for (auto asset : AbilityAssets)
+								{
+									UGaToGameplayAbilityBase* AbilityBase = Cast<UGaToGameplayAbilityBase>(asset);
+									if (AbilityBase != nullptr)
+									{
+										
+									}
+								}
 							}
 						}),
 						FCanExecuteAction()
@@ -81,6 +93,10 @@ void FElGaToBrowserMenuExtension::AddMenuEntry(UToolMenu* Menu)
 					   Action)
 					   );
 	
+}
+
+void FElGaToBrowserMenuExtension::OnCreateDataTables_Clicked()
+{
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -20,9 +20,6 @@ public:
 	
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="AbilityAsset",meta=(RowType="/Script/ElGaTo.GaToAbilityData"))
-	TObjectPtr<UDataTable> AbilityTable;
-	
 	UFUNCTION(BlueprintCallable)
 	FName GetAbilityName() const;
 #if WITH_EDITOR

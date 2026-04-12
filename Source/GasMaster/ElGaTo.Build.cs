@@ -35,7 +35,8 @@ public class ElGaTo : ModuleRules
 				"JsonUtilities",
 				"ContentBrowser",
 				"ToolMenus",
-				"ContentBrowserData"
+				"ContentBrowserData",
+				"EditorSubsystem"
 				
 			}
 			);

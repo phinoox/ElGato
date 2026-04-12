@@ -7,6 +7,7 @@
 #include "FileHelpers.h"
 #include "GaToLog.h"
 #include "Data/GaToAbilitySetAsset.h"
+#include "Editor/AbilityEditorSubsystem.h"
 #include "UObject/ObjectSaveContext.h"
 
 UGaToGameplayAbilityBase::UGaToGameplayAbilityBase()
@@ -28,6 +29,8 @@ FName UGaToGameplayAbilityBase::GetAbilityName() const
 #if WITH_EDITOR
 void UGaToGameplayAbilityBase::AddToTable()
 {
+	UAbilityEditorSubsystem* AbilityEditorSubsystem = GEditor->GetEditorSubsystem<UAbilityEditorSubsystem>();
+	UDataTable* AbilityTable = AbilityEditorSubsystem->GetAbilityTable();
 	if (!IsValid(AbilityTable))
 	{
 		UE_LOG(LogGaTo,Warning, TEXT("Trying to add ability to inavlid table"));

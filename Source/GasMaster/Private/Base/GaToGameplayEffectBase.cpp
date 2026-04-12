@@ -7,6 +7,7 @@
 #include "FileHelpers.h"
 #include "GaToLog.h"
 #include "Data//GaToEffectSetAsset.h"
+#include "Editor/AbilityEditorSubsystem.h"
 #include "UObject/ObjectSaveContext.h"
 
 FName UGaToGameplayEffectBase::GetEffectName() const
@@ -29,6 +30,9 @@ void UGaToGameplayEffectBase::PreSave(FObjectPreSaveContext SaveContext)
 
 void UGaToGameplayEffectBase::AddToTable()
 {
+	UAbilityEditorSubsystem* AbilityEditorSubsystem = GEditor->GetEditorSubsystem<UAbilityEditorSubsystem>();
+	UDataTable* EffectTable = AbilityEditorSubsystem->GetEffectTable();
+	
 	if (!IsValid(EffectTable))
 	{
 		UE_LOG(LogGaTo,Warning, TEXT("Trying to add Effect to inavlid table"));

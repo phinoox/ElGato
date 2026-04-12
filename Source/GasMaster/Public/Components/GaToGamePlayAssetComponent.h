@@ -39,7 +39,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
 	TSoftObjectPtr<UGaToGameplayAsset> GameplayAssetRef;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UGaToGameplayAsset> GameplayAsset;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")

@@ -49,10 +49,18 @@ public:
 	UFUNCTION()
 	static void CreateGameplayAsset(const FAssetPathInfo& AssetPathInfo,FName AssetName);
 	
-	UFUNCTION()
 	static UPackage* CreateNewPackage(const FAssetPathInfo& AssetPathInfo,FString AssetName);
 	
-	UFUNCTION()
+	static UPackage* CreateNewPackage(const FString& AssetPath,FString AssetName);
+	
 	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FAssetPathInfo& AssetPathInfo,FString AssetName);
+	
+	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FString& AssetPath,FString AssetName);
+	
+	UFUNCTION()
+	static UDataTable* CreateAbilityTable(FString Path,FString AssetName);
+	
+	UFUNCTION()
+	static UDataTable* CreateEffectTable(FString Path,FString AssetName);
 	
 };
