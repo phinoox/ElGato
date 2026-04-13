@@ -7,7 +7,10 @@
 #include "FileHelpers.h"
 #include "GaToLog.h"
 #include "Data//GaToEffectSetAsset.h"
+#include "Editor/AbilityAssetEditorFunctionLibrary.h"
 #include "Editor/AbilityEditorSubsystem.h"
+#include "Internationalization/StringTable.h"
+#include "Internationalization/StringTableCore.h"
 #include "UObject/ObjectSaveContext.h"
 
 FName UGaToGameplayEffectBase::GetEffectName() const
@@ -32,6 +35,7 @@ void UGaToGameplayEffectBase::AddToTable()
 {
 	UAbilityEditorSubsystem* AbilityEditorSubsystem = GEditor->GetEditorSubsystem<UAbilityEditorSubsystem>();
 	UDataTable* EffectTable = AbilityEditorSubsystem->GetEffectTable();
+	UStringTable* StringTableAsset = AbilityEditorSubsystem->GetEffectStringTable();
 	
 	if (!IsValid(EffectTable))
 	{
@@ -40,7 +44,24 @@ void UGaToGameplayEffectBase::AddToTable()
 	}
 	FGaToEffectData EffectAsset = FGaToEffectData();
 	EffectAsset.EffectClass = this->GetClass();
-	EffectAsset.DisplayName = FText::FromName(GetEffectName());
+	FName EffectName = GetEffectName();
+	EffectAsset.DisplayName = FText::FromName(EffectName);
+	if (StringTableAsset)
+	{
+		FStringTableRef StringTable = StringTableAsset->GetMutableStringTable();
+		FStringTableEntryConstPtr Entry = StringTable->FindEntry(EffectName.ToString());
+		const FString SourceString = EffectName.ToString();
+		
+		if (!Entry.IsValid() || !Entry->GetSourceString().Equals(SourceString))
+		{
+			StringTableAsset->Modify();
+			StringTable->SetSourceString(SourceString,SourceString);
+			UAbilityAssetEditorFunctionLibrary::SaveAsset(StringTableAsset);
+		}
+		FName TableName = FName(StringTableAsset->GetName());
+		//just using the assetname of the string table didn't do it, we need the path name
+		EffectAsset.DisplayName = FText::FromStringTable(FName(StringTableAsset->GetPathName()),SourceString);
+	}
 	FString Name =EffectAsset.DisplayName.ToString();
 	FDataTableEditorUtils::BroadcastPreChange(EffectTable, FDataTableEditorUtils::EDataTableChangeInfo::RowList);
 	EffectTable->AddRow(GetEffectName(),EffectAsset);

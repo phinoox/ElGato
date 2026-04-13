@@ -19,5 +19,7 @@ public:
 	
 	TObjectPtr<UDataTable> GetAbilityTable();
 	TObjectPtr<UDataTable> GetEffectTable();
+	TObjectPtr<UStringTable> GetAbilityStringTable();
+	TObjectPtr<UStringTable> GetEffectStringTable();
 	
 };

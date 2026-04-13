@@ -58,9 +58,11 @@ public:
 	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FString& AssetPath,FString AssetName);
 	
 	UFUNCTION()
-	static UDataTable* CreateAbilityTable(FString Path,FString AssetName);
+	static UDataTable* CreateDataTable(FString Path,FString AssetName,UScriptStruct* RowStruct);
 	
 	UFUNCTION()
-	static UDataTable* CreateEffectTable(FString Path,FString AssetName);
+	static UStringTable* CreateStringTable(FString Path,FString AssetName);
 	
+	UFUNCTION()
+	static bool SaveAsset(UObject* ObjectToSave);
 };
