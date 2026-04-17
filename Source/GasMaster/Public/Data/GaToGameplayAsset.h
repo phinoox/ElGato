@@ -29,5 +29,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UGaToAbilitySetAsset> ReactiveAbilities;
 	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
+	FGameplayTagContainer InitialTags;
+		
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
+	TObjectPtr<UDataTable> AttributeTable;
+	
+	
 
 };

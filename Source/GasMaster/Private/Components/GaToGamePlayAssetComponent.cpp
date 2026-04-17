@@ -57,16 +57,16 @@ void UGaToGamePlayAssetComponent::BeginPlay()
 		EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(GetOwner());
 		
-		InitializeAttributes();
-		InitializeTags();
+		GameplayAsset = GameplayAssetRef.LoadSynchronous();
 		
-		if (!GameplayAssetRef.IsNull())
+		if (GameplayAsset)
 		{
-			GameplayAsset = GameplayAssetRef.LoadSynchronous();
+			
 			Initialize();
 			 UGaToMainAttributeSet* AttributeSet = const_cast<UGaToMainAttributeSet*>(Cast<UGaToMainAttributeSet>(
 				AbilitySystemComponent->GetAttributeSet(UGaToMainAttributeSet::StaticClass())));
 			AttributeSet->OnPostAttributeChanged.AddUniqueDynamic(this,&UGaToGamePlayAssetComponent::OnAttributeChanged);
+			
 		}
 		
 	}
@@ -119,12 +119,16 @@ TSubclassOf<UGaToGameplayEffectBase> UGaToGamePlayAssetComponent::GetEffect(int 
 
 void UGaToGamePlayAssetComponent::Initialize()
 {
+	InitializeAttributes();
+	InitializeTags();
 	InitializeEffects();
 	InitializeAbilities();
 }
 
 void UGaToGamePlayAssetComponent::InitializeAttributes()
 {
+	TObjectPtr<UDataTable> AttributeTable = GameplayAsset->AttributeTable;
+	const UAttributeSet* AttributeSet = AbilitySystemComponent->GetAttributeSet(UGaToMainAttributeSet::StaticClass());
 	if (!IsValid(AttributeTable))
 		return;
 	for (auto RowName : AttributeTable->GetRowNames())
@@ -147,7 +151,8 @@ void UGaToGamePlayAssetComponent::InitializeAttributes()
 
 void UGaToGamePlayAssetComponent::InitializeTags()
 {
-	AbilitySystemComponent->AddLooseGameplayTags(InitialTags);
+	if (GameplayAsset)
+		AbilitySystemComponent->AddLooseGameplayTags(GameplayAsset->InitialTags);
 }
 
 void UGaToGamePlayAssetComponent::InitializeAbilities()

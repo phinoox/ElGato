@@ -18,4 +18,8 @@ namespace GATOCONFIG
 	constexpr FStringView CT_ATTRIBUTELEVELS_PREFIX = TEXTVIEW("CT_AttributeLevels_");
 	/* Prefix for automatically generated attribute Data tables*/
 	constexpr FStringView DT_ATTRIBUTS_PREFIX = TEXTVIEW("DT_Attributes_");
+	
+	constexpr FStringView DA_GAMEPLAY_PREFIX = TEXTVIEW("DA_Gameplay_");
+	constexpr FStringView DA_ABILITYSET_PREFIX = TEXTVIEW("DA_AbilitySet_");
+	constexpr FStringView DA_EFFECTSET_PREFIX = TEXTVIEW("DA_EffectSet_");
 }

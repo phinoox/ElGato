@@ -10,6 +10,8 @@
 #include "IContentBrowserSingleton.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Attributes/GaToBaseAttributeSet.h"
+#include "Base/GaToActorInterface.h"
+#include "Components/GaToGamePlayAssetComponent.h"
 #include "Data/FLeveledAttributeData.h"
 #include "Data/GaToGameplayAsset.h"
 #include "Internationalization/StringTable.h"
@@ -48,7 +50,7 @@ TArray<FString> UAbilityAssetEditorFunctionLibrary::GetScalableAttributes(UGaToB
 }
 
 UDataTable* UAbilityAssetEditorFunctionLibrary::CreateTableForAttributeSet(
-	UGaToBaseAttributeSet* AttributeSet, FName CharacterName, bool OnlyCurves)
+	UGaToBaseAttributeSet* AttributeSet, FName CharacterName)
 {
 	if (AttributeSet == nullptr)
 	{
@@ -61,10 +63,6 @@ UDataTable* UAbilityAssetEditorFunctionLibrary::CreateTableForAttributeSet(
 	TArray<FString> ScalableAttributes = GetScalableAttributes(AttributeSet);
 	UCurveTable* LevelCurves = CreateCurveTable(ScalableAttributes, AssetPathInfo, CharacterName);
 
-	if (OnlyCurves)
-	{
-		return nullptr;
-	}
 
 	UPackage* Package = CreateNewPackage(AssetPathInfo, TableAssetName);
 	UDataTable* NewTable = NewObject<UDataTable>(Package, UDataTable::StaticClass(), FName(TableAssetName),
@@ -172,17 +170,63 @@ UCurveTable* UAbilityAssetEditorFunctionLibrary::CreateCurveTable(TArray<FString
 	return NewTable;
 }
 
-void UAbilityAssetEditorFunctionLibrary::CreateGameplayAsset(const FAssetPathInfo& AssetPathInfo, FName AssetName)
+void UAbilityAssetEditorFunctionLibrary::CreateGameplayAsset(TScriptInterface<IGaToActorInterface>  Actor, FName CharacterName)
 {
-	FString TableAssetName = GATOCONFIG::CT_ATTRIBUTELEVELS_PREFIX + AssetName.ToString();
+	
+	auto AttributeSet = Actor->GetGaToMainAttributeSet();
+	FString TableAssetName = GATOCONFIG::DA_GAMEPLAY_PREFIX + CharacterName.ToString();
+	FAssetPathInfo AssetPathInfo(CharacterName.ToString());
 	UPackage* Package = CreateNewPackage(AssetPathInfo, TableAssetName);
-	UGaToGameplayAsset* GamePlayAsset = NewObject<UGaToGameplayAsset>(Package, UGaToGameplayAsset::StaticClass(),
+	TObjectPtr<UGaToGameplayAsset> GamePlayAsset = NewObject<UGaToGameplayAsset>(Package, UGaToGameplayAsset::StaticClass(),
 	                                                                  FName(TableAssetName), RF_Public | RF_Standalone);
+	GamePlayAsset->AbilitySets.Add(CreateAbilitySetAsset(AssetPathInfo,CharacterName.ToString()));
+	GamePlayAsset->ReactiveAbilities = CreateAbilitySetAsset(AssetPathInfo,CharacterName.ToString());
+	GamePlayAsset->InitialEffects = CreateEffectSetAsset(AssetPathInfo,CharacterName.ToString());
+	GamePlayAsset->AttributeTable = CreateTableForAttributeSet(AttributeSet,CharacterName);
+	
+	GamePlayAsset->MarkPackageDirty();
+	SaveNewPackage(Package, GamePlayAsset, AssetPathInfo, TableAssetName);
+	
+	Actor->GetGaToGamePlayAssetComponent()->GameplayAssetRef = GamePlayAsset;
+	
 
-	//	GamePlayAsset.
+	
 }
 
-UPackage* UAbilityAssetEditorFunctionLibrary::CreateNewPackage(const FAssetPathInfo& AssetPathInfo, FString AssetName)
+UGaToAbilitySetAsset* UAbilityAssetEditorFunctionLibrary::CreateAbilitySetAsset( const FAssetPathInfo& AssetPathInfo, const FString& AssetName)
+{
+	FString TableAssetName = GATOCONFIG::DA_ABILITYSET_PREFIX + AssetName;
+	UPackage* NewPackage = CreateNewPackage(AssetPathInfo,TableAssetName);
+	NewPackage->FullyLoad();
+	
+	UGaToAbilitySetAsset* NewSetAsset = NewObject<UGaToAbilitySetAsset>(NewPackage, UGaToAbilitySetAsset::StaticClass(), FName(TableAssetName),
+												 RF_Public | RF_Standalone);
+
+
+	NewSetAsset->MarkPackageDirty();
+	SaveNewPackage(NewPackage, NewSetAsset, AssetPathInfo, TableAssetName);
+
+	return NewSetAsset;
+}
+
+UGaToEffectSetAsset* UAbilityAssetEditorFunctionLibrary::CreateEffectSetAsset( const FAssetPathInfo& AssetPathInfo,
+	const FString& AssetName)
+{
+	FString TableAssetName = GATOCONFIG::DA_EFFECTSET_PREFIX + AssetName;
+	UPackage* NewPackage = CreateNewPackage(AssetPathInfo,TableAssetName);
+	NewPackage->FullyLoad();
+	
+	UGaToEffectSetAsset* NewSetAsset = NewObject<UGaToEffectSetAsset>(NewPackage, UGaToEffectSetAsset::StaticClass(), FName(TableAssetName),
+												 RF_Public | RF_Standalone);
+
+
+	NewSetAsset->MarkPackageDirty();
+	SaveNewPackage(NewPackage, NewSetAsset, AssetPathInfo, TableAssetName);
+
+	return NewSetAsset;
+}
+
+UPackage* UAbilityAssetEditorFunctionLibrary::CreateNewPackage(const FAssetPathInfo& AssetPathInfo, const FString& AssetName)
 {
 	FString ShortPackagePath = AssetPathInfo.AssetPath + AssetName;
 	return CreateNewPackage(ShortPackagePath, AssetName);
@@ -197,7 +241,7 @@ UPackage* UAbilityAssetEditorFunctionLibrary::CreateNewPackage(const FString& As
 }
 
 void UAbilityAssetEditorFunctionLibrary::SaveNewPackage(UPackage* Package, UObject* NewAsset,
-                                                        const FAssetPathInfo& AssetPathInfo, FString AssetName)
+                                                        const FAssetPathInfo& AssetPathInfo, const FString& AssetName)
 {
 	FString NewAssetPath = AssetPathInfo.AssetPath + AssetName;
 	SaveNewPackage(Package, NewAsset, NewAssetPath, AssetName);
@@ -218,7 +262,7 @@ void UAbilityAssetEditorFunctionLibrary::SaveNewPackage(UPackage* Package, UObje
 	UE_LOG(LogGaTo, Display, TEXT("Save Curvtetable %s"), success ? TEXT("Successfull") : TEXT("Failed"));
 }
 
-UDataTable* UAbilityAssetEditorFunctionLibrary::CreateDataTable(FString Path, FString AssetName,UScriptStruct* RowStruct)
+UDataTable* UAbilityAssetEditorFunctionLibrary::CreateDataTable(const FString& Path, const FString& AssetName,UScriptStruct* RowStruct)
 {
 	UPackage* NewPackage = CreatePackage(*Path);
 	NewPackage->FullyLoad();
@@ -234,7 +278,7 @@ UDataTable* UAbilityAssetEditorFunctionLibrary::CreateDataTable(FString Path, FS
 	return NewTable;
 }
 
-UStringTable* UAbilityAssetEditorFunctionLibrary::CreateStringTable(FString Path, FString AssetName)
+UStringTable* UAbilityAssetEditorFunctionLibrary::CreateStringTable(const FString& Path, const FString& AssetName)
 {
 	UPackage* NewPackage = CreatePackage(*Path);
 	NewPackage->FullyLoad();

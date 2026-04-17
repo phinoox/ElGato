@@ -6,6 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AbilityAssetEditorFunctionLibrary.generated.h"
 
+class UGaToEffectSetAsset;
+class UGaToAbilitySetAsset;
+
 USTRUCT()
 struct FAssetPathInfo
 {
@@ -36,7 +39,7 @@ public:
 	static TArray<FString> GetScalableAttributes(UGaToBaseAttributeSet* AttributeSet);
 	
 	UFUNCTION(BlueprintCallable,CallInEditor)
-	static UDataTable* CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName CharacterName,bool OnlyCurves=false);
+	static UDataTable* CreateTableForAttributeSet(UGaToBaseAttributeSet* AttributeSet,FName CharacterName);
 	
 	UFUNCTION(BlueprintCallable,CallInEditor)
 	static FString CreateJsonForAttributeSet(UGaToBaseAttributeSet* AttributeSet);
@@ -46,22 +49,27 @@ public:
 	UFUNCTION()
 	static UCurveTable* CreateCurveTable(TArray<FString> AttributeNames,const FAssetPathInfo& AssetPathInfo,const FName AssetName);
 	
-	UFUNCTION()
-	static void CreateGameplayAsset(const FAssetPathInfo& AssetPathInfo,FName AssetName);
+	UFUNCTION(BlueprintCallable,CallInEditor)
+	static void CreateGameplayAsset(TScriptInterface<IGaToActorInterface> Actor, FName CharacterName);
 	
-	static UPackage* CreateNewPackage(const FAssetPathInfo& AssetPathInfo,FString AssetName);
+	static UGaToAbilitySetAsset* CreateAbilitySetAsset(const FAssetPathInfo& AssetPathInfo, const FString& AssetName);
+	
+	static UGaToEffectSetAsset* CreateEffectSetAsset(const FAssetPathInfo& AssetPathInfo, const FString& AssetName);
+	
+	
+	static UPackage* CreateNewPackage(const FAssetPathInfo& AssetPathInfo, const FString& AssetName);
 	
 	static UPackage* CreateNewPackage(const FString& AssetPath,FString AssetName);
 	
-	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FAssetPathInfo& AssetPathInfo,FString AssetName);
+	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FAssetPathInfo& AssetPathInfo, const FString& AssetName);
 	
 	static void SaveNewPackage(UPackage* Package,UObject* NewAsset,const FString& AssetPath,FString AssetName);
 	
 	UFUNCTION()
-	static UDataTable* CreateDataTable(FString Path,FString AssetName,UScriptStruct* RowStruct);
+	static UDataTable* CreateDataTable(const FString& Path, const FString& AssetName,UScriptStruct* RowStruct);
 	
 	UFUNCTION()
-	static UStringTable* CreateStringTable(FString Path,FString AssetName);
+	static UStringTable* CreateStringTable(const FString& Path, const FString& AssetName);
 	
 	UFUNCTION()
 	static bool SaveAsset(UObject* ObjectToSave);

@@ -30,7 +30,7 @@ public:
 
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class ELGATO_API UGaToEffectSetAsset : public UDataAsset
 {
 	GENERATED_BODY()

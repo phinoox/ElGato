@@ -41,13 +41,7 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere,Category="Ability Set")
 	TObjectPtr<UGaToGameplayAsset> GameplayAsset;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
-	FGameplayTagContainer InitialTags;
 		
-	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category="Ability Set")
-	TObjectPtr<UDataTable> AttributeTable;
-	
 	UFUNCTION(BlueprintCallable)
 	void SwitchAbilitySet(int index);
 	
